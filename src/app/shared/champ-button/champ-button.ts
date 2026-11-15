@@ -1,8 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'champ-button',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './champ-button.html',
   styleUrl: './champ-button.scss',
 })
@@ -10,6 +11,8 @@ export class ChampButton {
   @Input() text: string = '';
 
   @Input() ratio: number = 0;
+
+  @Input() inactivated: boolean = true;
 
   get viewBox(): string {
     return `0 0 ${this.ratio * 100} 100`;

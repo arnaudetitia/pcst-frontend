@@ -1,4 +1,4 @@
-<svg [attr.viewBox]="viewBox">
+<svg [attr.viewBox]="viewBox" [ngClass]="{ disabled: inactivated }">
   <path
     [attr.d]="pathD"
     fill="#a7074b"
