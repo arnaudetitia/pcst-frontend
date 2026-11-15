@@ -1,8 +1,20 @@
 <div class="homepage-container">
   <img src="../../../assets/pcst-logo.png" />
   <div class="button-list">
-    <champ-button [text]="'Lancer une partie'" [ratio]="10"></champ-button>
-    <champ-button [text]="'Gestion des questions'" [ratio]="10"></champ-button>
-    <champ-button [text]="'Gestion des parties'" [ratio]="10"></champ-button>
+    <champ-button
+      [text]="'Lancer une partie'"
+      [ratio]="10"
+      [inactivated]="!backendAwake()"
+    ></champ-button>
+    <champ-button
+      [text]="'Gestion des questions'"
+      [ratio]="10"
+      [inactivated]="!backendAwake()"
+    ></champ-button>
+    <champ-button
+      [text]="'Gestion des parties'"
+      [ratio]="10"
+      [inactivated]="!backendAwake()"
+    ></champ-button>
   </div>
 </div>
