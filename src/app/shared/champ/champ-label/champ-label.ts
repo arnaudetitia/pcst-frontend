@@ -2,15 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'champ-button',
+  selector: 'champ-label',
   imports: [CommonModule],
-  templateUrl: './champ-button.html',
-  styleUrl: './champ-button.scss',
+  templateUrl: '../common/champ.html',
+  styleUrl: './champ-label.scss',
 })
-export class ChampButton {
+export class ChampLabel {
   @Input() text: string = '';
 
   @Input() ratio: number = 0;
+
+  @Input() colorFill = '#a7074b';
 
   @Input() inactivated: boolean = true;
 
