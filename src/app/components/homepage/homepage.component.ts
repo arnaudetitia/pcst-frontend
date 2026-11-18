@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ChampButton } from '../../shared/champ-button/champ-button';
+import { ChampButton } from '../../shared/champ/champ-button/champ-button';
 import { HealthStore } from '../../stores/health.store';
 import { tap } from 'rxjs';
 

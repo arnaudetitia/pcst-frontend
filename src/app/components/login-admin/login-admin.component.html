@@ -1,0 +1,31 @@
+<div class="login-admin-container">
+  <div class="form-container">
+    <champ-label [text]="'Mot de passe d\'accès au site'" [ratio]="11"></champ-label>
+    <form [formGroup]="adminMdpForm">
+      <input
+        matInput
+        class="champ"
+        type="password"
+        formControlName="adminMdp"
+        autocomplete="current-password"
+        [ngClass]="{
+          error: error() !== null,
+        }"
+      />
+      @if (error()) {
+        <champ-label
+          class="champ-error"
+          [text]="error() ?? ''"
+          [colorFill]="'red'"
+          [ratio]="8"
+        ></champ-label>
+      }
+    </form>
+    <champ-button
+      [text]="'Accéder au site'"
+      (click)="goToHomepage()"
+      [inactivated]="!backendAwake()"
+      [ratio]="7"
+    ></champ-button>
+  </div>
+</div>
