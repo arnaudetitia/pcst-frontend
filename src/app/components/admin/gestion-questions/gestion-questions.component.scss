@@ -1,0 +1,71 @@
+.gestion-questions-container {
+  background-color: darkgray;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100vw;
+  height: 100vh;
+
+  padding: 2vh;
+
+  champ-label {
+    width: 25vw;
+  }
+
+  .table-wrapper {
+    flex: 1;
+    overflow: auto;
+    background: white;
+    border: 1vh solid black;
+    border-radius: 2vh;
+
+    margin-top: 2vh;
+  }
+
+  table {
+    th {
+      font-weight: bold;
+    }
+
+    .mat-column-question {
+      width: 30vw;
+    }
+
+    .mot-indice {
+      font-weight: bold;
+      color: #a7074b;
+    }
+
+    .reponses-list {
+      display: flex;
+      flex-direction: row;
+      align-items: left;
+
+      .reponse-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        margin-right: 1vw;
+
+        border: 5px solid black;
+        padding: 0.5vh;
+
+        color: white;
+
+        &.reponse-inferieure {
+          background-color: red;
+        }
+
+        &.bonne-reponse {
+          background-color: green;
+        }
+
+        &.reponse-superieure {
+          background-color: black;
+        }
+      }
+    }
+  }
+}
