@@ -10,6 +10,7 @@
       [text]="'Gestion des questions'"
       [ratio]="10"
       [inactivated]="!backendAwake()"
+      (click)="goToGestionQuestions()"
     ></champ-button>
     <champ-button
       [text]="'Gestion des parties'"

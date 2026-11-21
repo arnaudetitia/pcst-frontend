@@ -1,0 +1,45 @@
+<div class="gestion-questions-container">
+  <bouton-retour></bouton-retour>
+  <champ-label [text]="'Gestion des questions'" [ratio]="7"></champ-label>
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="allQuestions()">
+      <ng-container matColumnDef="question">
+        <th mat-header-cell *matHeaderCellDef>Question</th>
+        <td mat-cell *matCellDef="let question">
+          @for (mot of question.question.split(' '); track mot) {
+            <span
+              [ngClass]="{
+                'mot-indice': mot.toLowerCase() === question.motQuestion.toLowerCase(),
+              }"
+              >{{ mot }}</span
+            >
+            <span>{{ ' ' }}</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="reponses">
+        <th mat-header-cell *matHeaderCellDef>Réponses</th>
+        <td mat-cell *matCellDef="let question">
+          <div class="reponses-list">
+            @for (reponse of question.reponses; track reponse) {
+              <div
+                class="reponse-item"
+                [ngClass]="{
+                  'reponse-inferieure': reponse < question.bonneReponse,
+                  'bonne-reponse': reponse === question.bonneReponse,
+                  'reponse-superieure': reponse > question.bonneReponse,
+                }"
+              >
+                {{ reponse.toLocaleString('fr-FR') }}
+              </div>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>
