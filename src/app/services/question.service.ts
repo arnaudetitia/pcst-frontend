@@ -17,4 +17,8 @@ export class QuestionService {
   createQuestion(question: QuestionVo): Observable<Question[]> {
     return this.http.post<Question[]>(`${environment.apiUrl}/questions`, { question });
   }
+
+  updateQuestion(idQuestion: number | undefined, question: QuestionVo) {
+    return this.http.put<Question[]>(`${environment.apiUrl}/questions`, { idQuestion, question });
+  }
 }

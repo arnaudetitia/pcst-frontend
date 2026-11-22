@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddEditQuestionDialogComponent } from './add-edit-question-dialog.component/add-edit-question-dialog.component';
 import { ChampButton } from '../../../shared/champ/champ-button/champ-button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-gestion-questions.component',
@@ -20,6 +22,8 @@ import { MatMenuModule } from '@angular/material/menu';
     ChampButton,
     MatMenuModule,
     MatTableModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './gestion-questions.component.html',
   styleUrl: './gestion-questions.component.scss',
@@ -27,7 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
 export class GestionQuestionsComponent implements OnInit {
   allQuestions = signal(new MatTableDataSource<Question>([]));
 
-  displayedColumns = ['question', 'reponses'];
+  displayedColumns = ['question', 'reponses', 'action'];
 
   openAddEditQuestionDialog = inject(MatDialog);
 
@@ -48,6 +52,28 @@ export class GestionQuestionsComponent implements OnInit {
     const dialogRef = this.openAddEditQuestionDialog.open(AddEditQuestionDialogComponent, {
       data: {
         action: 'add',
+      },
+      width: '75vw',
+      disableClose: true,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        tap((questionUpdated) => {
+          if (questionUpdated) {
+            this.allQuestions().data = questionUpdated;
+          }
+        }),
+      )
+      .subscribe();
+  }
+
+  openEditQuestionDialog(question: Question) {
+    const dialogRef = this.openAddEditQuestionDialog.open(AddEditQuestionDialogComponent, {
+      data: {
+        action: 'edit',
+        question,
       },
       width: '75vw',
       disableClose: true,
