@@ -134,28 +134,16 @@ export class AddEditQuestionDialogComponent {
     this.questionForm = this.fb.group({
       question: [questionToEdit.question, Validators.required],
       motIndice: [questionToEdit.motIndice, Validators.required],
-      reponses: this.fb.array(questionToEdit.reponses || []),
+      reponses: this.fb.array([]),
     });
+
+    this.updateOptionMotIndiceList(this.questionForm.get('question')?.value);
 
     this.questionForm
       .get('question')
       ?.valueChanges.pipe(
         tap((question) => {
-          const words =
-            typeof question === 'string'
-              ? question
-                  .normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '')
-                  .toLowerCase()
-                  .split(/[^\p{L}\p{N}]+/u)
-                  .filter((word) => word.length > 2)
-                  .filter((word) => !this.stopWords.has(word))
-              : [];
-          this.motIndiceOptionList.set(
-            [...new Set(words.filter(Boolean))].map(
-              (mot) => mot.charAt(0).toUpperCase() + mot.slice(1).toLowerCase(),
-            ),
-          );
+          this.updateOptionMotIndiceList(question);
         }),
       )
       .subscribe();
@@ -164,7 +152,7 @@ export class AddEditQuestionDialogComponent {
       this.indexValues.map((_, i) =>
         this.fb.group({
           value: [
-            '',
+            questionToEdit && questionToEdit.reponses ? questionToEdit.reponses[i] : '',
             [
               Validators.required,
               Validators.min(this.marges()[i].borneInf),
@@ -174,6 +162,12 @@ export class AddEditQuestionDialogComponent {
         }),
       ),
     );
+
+    if (questionToEdit && questionToEdit.bonneReponse) {
+      this.indexBonneReponse.set(
+        questionToEdit.reponses.findIndex((reponse) => reponse === questionToEdit.bonneReponse),
+      );
+    }
 
     const isReponse = (value: number | null): value is number =>
       typeof value === 'number' && Number.isFinite(value);
@@ -224,6 +218,24 @@ export class AddEditQuestionDialogComponent {
     return this.questionForm.get('reponses') as FormArray;
   }
 
+  updateOptionMotIndiceList(question: string) {
+    const words =
+      typeof question === 'string'
+        ? question
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .split(/[^\p{L}\p{N}]+/u)
+            .filter((word) => word.length > 2)
+            .filter((word) => !this.stopWords.has(word))
+        : [];
+    this.motIndiceOptionList.set(
+      [...new Set(words.filter(Boolean))].map(
+        (mot) => mot.charAt(0).toUpperCase() + mot.slice(1).toLowerCase(),
+      ),
+    );
+  }
+
   updateIndexBonneReponse(newIndex: number) {
     this.indexBonneReponse.set(newIndex);
   }
@@ -235,10 +247,13 @@ export class AddEditQuestionDialogComponent {
       bonneReponse: this.reponsesForm?.value[this.indexBonneReponse() ?? -1].value,
       reponses: this.reponsesForm?.value.map((reponse: any) => reponse.value),
     };
-    console.log(questionVo);
 
-    this.questionService
-      .createQuestion(questionVo)
+    const addEditObservable =
+      this.data.action === 'add'
+        ? this.questionService.createQuestion(questionVo)
+        : this.questionService.updateQuestion(this.data.question?.id, questionVo);
+
+    addEditObservable
       .pipe(
         tap((questionsUpdated) => {
           this.dialogRef.close(questionsUpdated);

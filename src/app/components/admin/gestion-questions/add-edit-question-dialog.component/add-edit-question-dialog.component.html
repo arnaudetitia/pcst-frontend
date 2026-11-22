@@ -1,4 +1,4 @@
-<h2 mat-title>Ajouter une nouvelle question</h2>
+<h2 mat-title>{{ data.action === 'add' ? 'Ajouter une nouvelle ' : "Édition d'une " }} question</h2>
 <mat-dialog-content class="question-form-container">
   <form [formGroup]="questionForm">
     <mat-form-field class="question-intitule-field">
@@ -51,9 +51,10 @@
     [colorFill]="'darkgrey'"
   ></champ-button>
 
+  @let validationButtonText = (data.action === 'add' ? 'Créer' : 'Éditer') + ' la question';
   <champ-button
     class="create-button"
-    [text]="'Créer la question'"
+    [text]="validationButtonText"
     [ratio]="6.5"
     [inactivated]="questionForm.invalid || bonneReponse === null"
     (click)="addEditQuestion()"
