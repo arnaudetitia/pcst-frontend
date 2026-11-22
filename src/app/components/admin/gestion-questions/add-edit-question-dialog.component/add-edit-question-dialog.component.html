@@ -1,0 +1,61 @@
+<h2 mat-title>Ajouter une nouvelle question</h2>
+<mat-dialog-content class="question-form-container">
+  <form [formGroup]="questionForm">
+    <mat-form-field class="question-intitule-field">
+      <mat-label>Question</mat-label>
+      <input matInput formControlName="question" />
+    </mat-form-field>
+
+    <mat-form-field class="mot-indice-field">
+      <mat-label>Mot indice</mat-label>
+      <mat-select formControlName="motIndice">
+        @for (option of motIndiceOptionList(); track option) {
+          <mat-option [value]="option">{{ option }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div formArrayName="reponses" class="reponses-list-form">
+      @let bonneReponse = indexBonneReponse();
+      @for (index of indexValues; track index) {
+        <div [formGroupName]="index" class="reponse-item-container">
+          <mat-form-field
+            class="reponse-field"
+            appearance="fill"
+            [ngClass]="{
+              'reponse-inferieure': bonneReponse !== null && index < bonneReponse,
+              'bonne-reponse': bonneReponse !== null && index === bonneReponse,
+              'reponse-superieure': bonneReponse !== null && index > bonneReponse,
+            }"
+          >
+            <input type="number" matInput formControlName="value" />
+          </mat-form-field>
+          <button matIconButton (click)="updateIndexBonneReponse(index)">
+            <mat-icon
+              [ngClass]="{
+                'bonne-reponse': bonneReponse !== null && index === bonneReponse,
+              }"
+              >check</mat-icon
+            >
+          </button>
+        </div>
+      }
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <champ-button
+    mat-dialog-close
+    [text]="'Annuler'"
+    [ratio]="5"
+    [colorFill]="'darkgrey'"
+  ></champ-button>
+
+  <champ-button
+    class="create-button"
+    [text]="'Créer la question'"
+    [ratio]="6.5"
+    [inactivated]="questionForm.invalid || bonneReponse === null"
+    (click)="addEditQuestion()"
+  ></champ-button>
+</mat-dialog-actions>
