@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { Question } from '../models/question.model';
+import { Question, QuestionVo } from '../models/question.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,5 +12,9 @@ export class QuestionService {
 
   getAllQuestions(): Observable<Question[]> {
     return this.http.get<Question[]>(`${environment.apiUrl}/questions`);
+  }
+
+  createQuestion(question: QuestionVo): Observable<Question[]> {
+    return this.http.post<Question[]>(`${environment.apiUrl}/questions`, { question });
   }
 }

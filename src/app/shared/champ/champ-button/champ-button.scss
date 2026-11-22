@@ -10,16 +10,17 @@ svg {
       stroke: yellow;
     }
   }
+}
 
-  &.disabled {
-    opacity: 0.5;
+.disabled {
+  opacity: 0.5;
 
-    &:hover {
-      cursor: not-allowed;
+  &:hover,
+  svg:hover {
+    cursor: not-allowed;
 
-      path {
-        stroke: black;
-      }
+    path {
+      stroke: black;
     }
   }
 }

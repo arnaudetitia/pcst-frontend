@@ -1,15 +1,24 @@
 <div class="gestion-questions-container">
   <bouton-retour></bouton-retour>
   <champ-label [text]="'Gestion des questions'" [ratio]="7"></champ-label>
+  <champ-button
+    [text]="'Créer de nouvelles questions'"
+    [ratio]="10"
+    [matMenuTriggerFor]="creationImportQuestionsMenu"
+  ></champ-button>
+  <mat-menu #creationImportQuestionsMenu="matMenu">
+    <button mat-menu-item (click)="openAddQuestionDialog()">Unitairement</button>
+    <button mat-menu-item>Par import de fichier</button>
+  </mat-menu>
   <div class="table-wrapper">
     <table mat-table [dataSource]="allQuestions()">
       <ng-container matColumnDef="question">
         <th mat-header-cell *matHeaderCellDef>Question</th>
         <td mat-cell *matCellDef="let question">
-          @for (mot of question.question.split(' '); track mot) {
+          @for (mot of question.question.split(' '); track $index) {
             <span
               [ngClass]="{
-                'mot-indice': mot.toLowerCase() === question.motQuestion.toLowerCase(),
+                'mot-indice': mot.toLowerCase() === question.motIndice.toLowerCase(),
               }"
               >{{ mot }}</span
             >
@@ -22,7 +31,7 @@
         <th mat-header-cell *matHeaderCellDef>Réponses</th>
         <td mat-cell *matCellDef="let question">
           <div class="reponses-list">
-            @for (reponse of question.reponses; track reponse) {
+            @for (reponse of question.reponses; track $index) {
               <div
                 class="reponse-item"
                 [ngClass]="{
