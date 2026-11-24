@@ -12,6 +12,7 @@ import { ChampButton } from '../../../shared/champ/champ-button/champ-button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ImportQuestionDialogComponent } from './import-question-dialog.component/import-question-dialog.component';
 
 @Component({
   selector: 'app-gestion-questions.component',
@@ -34,6 +35,7 @@ export class GestionQuestionsComponent implements OnInit {
   displayedColumns = ['question', 'reponses', 'action'];
 
   openAddEditQuestionDialog = inject(MatDialog);
+  openImportDialog = inject(MatDialog);
 
   constructor(private questionsService: QuestionService) {}
 
@@ -85,6 +87,24 @@ export class GestionQuestionsComponent implements OnInit {
         tap((questionUpdated) => {
           if (questionUpdated) {
             this.allQuestions().data = questionUpdated;
+          }
+        }),
+      )
+      .subscribe();
+  }
+
+  openImportQuestionsDialog() {
+    const dialogRef = this.openImportDialog.open(ImportQuestionDialogComponent, {
+      width: '75vw',
+      disableClose: true,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        tap((questionListUpdated) => {
+          if (questionListUpdated) {
+            this.allQuestions().data = questionListUpdated;
           }
         }),
       )

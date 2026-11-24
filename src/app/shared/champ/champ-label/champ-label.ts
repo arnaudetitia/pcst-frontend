@@ -16,6 +16,12 @@ export class ChampLabel {
 
   @Input() inactivated: boolean = false;
 
+  handleClick(event: MouseEvent): void {
+    if (this.inactivated) {
+      event.stopPropagation();
+    }
+  }
+
   get viewBox(): string {
     return `0 0 ${this.ratio * 100} 100`;
   }
