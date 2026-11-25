@@ -14,6 +14,13 @@
         }
       </mat-select>
     </mat-form-field>
+    <champ-button
+      class="random-answers-button"
+      [text]="'Générer des réponses aléatoires'"
+      [ratio]="10"
+      [inactivated]="!canGenerateRandomReponses()"
+      (click)="generateRandomReponses()"
+    ></champ-button>
 
     <div formArrayName="reponses" class="reponses-list-form">
       @let bonneReponse = indexBonneReponse();
@@ -38,6 +45,17 @@
               >check</mat-icon
             >
           </button>
+          @if (![0, indexBonneReponse(), 9].includes(index)) {
+            <button matIconButton (click)="switchLockState(index)">
+              <mat-icon>
+                @if (lockedValue()[index]) {
+                  lock
+                } @else {
+                  lock_open
+                }
+              </mat-icon>
+            </button>
+          }
         </div>
       }
     </div>

@@ -21,10 +21,16 @@
 }
 
 champ-button {
+  display: block;
   width: 15vw;
 
   &.create-button {
     width: 20vw;
+  }
+
+  &.random-answers-button {
+    width: 30vw;
+    margin-bottom: 3vh;
   }
 }
 
@@ -73,7 +79,7 @@ champ-button {
     mat-icon {
       font-weight: bold;
       font-size: 3vh;
-      scale: 1.5;
+      scale: 1.3;
       &.bonne-reponse {
         color: green;
       }

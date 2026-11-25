@@ -11,7 +11,7 @@ import { Question, QuestionVo } from '../../../../models/question.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, combineLatest, of, startWith, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -60,6 +60,10 @@ export class AddEditQuestionDialogComponent {
   indexBonneReponse = signal<number | null>(null);
 
   data = inject<{ action: 'add' | 'edit'; question?: Question }>(MAT_DIALOG_DATA);
+
+  canGenerateRandomReponses = signal<boolean>(false);
+
+  lockedValue = signal<boolean[]>(Array.from({ length: 10 }, (_, index) => [0, 9].includes(index)));
 
   stopWords = new Set([
     // Articles
@@ -212,6 +216,24 @@ export class AddEditQuestionDialogComponent {
         }),
       )
       .subscribe();
+
+    const valeurMinControl = (this.reponsesForm.controls[0] as FormGroup).get('value');
+    const valeurMaxControl = (this.reponsesForm.controls[9] as FormGroup).get('value');
+
+    combineLatest([
+      valeurMinControl!.valueChanges.pipe(startWith(valeurMinControl!.value)),
+      valeurMaxControl!.valueChanges.pipe(startWith(valeurMaxControl!.value)),
+    ])
+      .pipe(
+        tap(([valeurMin, valeurMax]) => {
+          if (valeurMax > valeurMin && valeurMax - valeurMin >= 9) {
+            this.canGenerateRandomReponses.set(true);
+          } else {
+            this.canGenerateRandomReponses.set(false);
+          }
+        }),
+      )
+      .subscribe();
   }
 
   get reponsesForm() {
@@ -237,7 +259,83 @@ export class AddEditQuestionDialogComponent {
   }
 
   updateIndexBonneReponse(newIndex: number) {
+    if (this.indexBonneReponse()) {
+      const oldIndexBonneReponse = this.indexBonneReponse() ?? -1;
+      this.setLockState(oldIndexBonneReponse, false);
+    }
     this.indexBonneReponse.set(newIndex);
+    this.setLockState(newIndex, true);
+  }
+
+  generateRandomReponses() {
+    const values = this.reponsesForm.value.map((reponse: { value: number | null }) =>
+      typeof reponse.value === 'number' ? reponse.value : null,
+    );
+    const margeGenerations: Marge[] = values.map((value: number | null, index: number) => {
+      if (typeof value === 'number' && this.lockedValue()[index]) {
+        return { borneInf: value, borneSup: value } as Marge;
+      } else {
+        let borneInf = 0;
+        for (let previousIndex = index - 1; previousIndex >= 0; previousIndex--) {
+          if (this.lockedValue()[previousIndex] && typeof values[previousIndex] === 'number') {
+            borneInf = values[previousIndex];
+            break;
+          }
+        }
+
+        let borneSup: number | null = null;
+        for (let nextIndex = index + 1; nextIndex < values.length; nextIndex++) {
+          if (this.lockedValue()[nextIndex] && typeof values[nextIndex] === 'number') {
+            borneSup = values[nextIndex];
+            break;
+          }
+        }
+        return { borneInf, borneSup };
+      }
+    });
+
+    let newValuesSet: Set<number> = new Set();
+    margeGenerations.forEach((marge: Marge) => {
+      if (marge.borneInf === marge.borneSup) {
+        newValuesSet.add(marge.borneInf);
+      } else {
+        let newValueGenerated;
+        do {
+          newValueGenerated = Math.floor(
+            ((marge.borneSup as number) - marge.borneInf) * Math.random() + marge.borneInf + 1,
+          );
+        } while (newValuesSet.has(newValueGenerated));
+        newValuesSet.add(newValueGenerated);
+      }
+    });
+    const newValues = Array.from(newValuesSet).sort();
+    this.reponsesForm.patchValue(
+      newValues.map((value) => {
+        return { value };
+      }),
+    );
+  }
+
+  switchLockState(indexToSwitch: number) {
+    this.lockedValue.update((value) =>
+      value.map((lock, index) => {
+        if (index === indexToSwitch) {
+          return !lock;
+        }
+        return lock;
+      }),
+    );
+  }
+
+  setLockState(indexToSwitch: number, lockState: boolean) {
+    this.lockedValue.update((value) =>
+      value.map((lock, index) => {
+        if (index === indexToSwitch) {
+          return lockState;
+        }
+        return lock;
+      }),
+    );
   }
 
   addEditQuestion() {
