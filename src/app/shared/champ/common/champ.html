@@ -1,4 +1,4 @@
-<div [ngClass]="{ disabled: inactivated }">
+<div [ngClass]="{ disabled: inactivated }" (click)="handleClick($event)">
   <svg [attr.viewBox]="viewBox">
     <path
       [attr.d]="pathD"

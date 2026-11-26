@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ChampButton } from '../../shared/champ/champ-button/champ-button';
 import { HealthStore } from '../../stores/health.store';
 import { tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-homepage.component',
@@ -12,7 +13,10 @@ import { tap } from 'rxjs';
 export class HomepageComponent implements OnInit {
   backendAwake = signal<boolean>(false);
 
-  constructor(private healthStore: HealthStore) {}
+  constructor(
+    private healthStore: HealthStore,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.healthStore.backendAwake$
@@ -22,5 +26,9 @@ export class HomepageComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  goToGestionQuestions() {
+    this.router.navigate(['admin', 'gestion-questions']);
   }
 }

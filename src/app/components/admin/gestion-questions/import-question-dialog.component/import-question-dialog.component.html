@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>Importer un fichier CSV</h2>
+<mat-dialog-content class="import-questions-container">
+  <div class="file-selector">
+    <input
+      class="import-file-input"
+      #fileInput
+      type="file"
+      accept=".csv"
+      (change)="onFileSelected($event)"
+    />
+    <champ-button [text]="'Choisir'" [ratio]="5" (click)="fileInput.click()"> </champ-button>
+    @if (fileName()) {
+      <champ-label [text]="fileName()" [ratio]="10"></champ-label>
+    }
+  </div>
+  @if (isChecking()) {
+    <mat-spinner></mat-spinner>
+  }
+  @if (!isChecking() && checkDone()) {
+    @if (errorsImport().length) {
+      <table>
+        <thead>
+          <th>Ligne</th>
+          <th>Erreur</th>
+        </thead>
+        @for (error of errorsImport(); track error) {
+          <tr
+            [ngClass]="{
+              error: error.type === 'error',
+              warning: error.type === 'warning',
+            }"
+          >
+            <td>{{ error.ligne }}</td>
+            <td>{{ error.message }}</td>
+          </tr>
+        }
+      </table>
+    } @else {
+      <div class="champ pret-a-import">
+        Votre fichier peut être importé<mat-icon>check</mat-icon>
+      </div>
+    }
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <champ-button
+    mat-dialog-close
+    [text]="'Annuler'"
+    [ratio]="5"
+    [colorFill]="'darkgrey'"
+  ></champ-button>
+  <champ-button
+    [text]="'Vérifier le fichier'"
+    [ratio]="6.5"
+    [inactivated]="!fileName()"
+    (click)="checkImportQuestion()"
+  >
+  </champ-button>
+  <champ-button
+    [text]="'Importer le fichier'"
+    [ratio]="6.5"
+    [inactivated]="!checkDone() || !canImportFile()"
+    (click)="importQuestions()"
+  >
+  </champ-button>
+</mat-dialog-actions>
