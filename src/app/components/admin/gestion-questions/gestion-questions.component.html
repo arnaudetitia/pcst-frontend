@@ -1,15 +1,18 @@
 <div class="gestion-questions-container">
   <bouton-retour></bouton-retour>
   <champ-label [text]="'Gestion des questions'" [ratio]="7"></champ-label>
-  <champ-button
-    [text]="'Créer de nouvelles questions'"
-    [ratio]="10"
-    [matMenuTriggerFor]="creationImportQuestionsMenu"
-  ></champ-button>
-  <mat-menu #creationImportQuestionsMenu="matMenu">
-    <button mat-menu-item (click)="openAddQuestionDialog()">Unitairement</button>
-    <button mat-menu-item (click)="openImportQuestionsDialog()">Par import de fichier</button>
-  </mat-menu>
+  <div class="actions-container">
+    <champ-button
+      [text]="'Créer de nouvelles questions'"
+      [ratio]="10"
+      [matMenuTriggerFor]="creationImportQuestionsMenu"
+    ></champ-button>
+    <mat-menu #creationImportQuestionsMenu="matMenu">
+      <button mat-menu-item (click)="openAddQuestionDialog()">Unitairement</button>
+      <button mat-menu-item (click)="openImportQuestionsDialog()">Par import de fichier</button>
+    </mat-menu>
+    <filtrage-question (onFiltreValueChange)="updateFiltre($event)"></filtrage-question>
+  </div>
   <div class="table-wrapper">
     <table mat-table [dataSource]="allQuestions()">
       <ng-container matColumnDef="question">

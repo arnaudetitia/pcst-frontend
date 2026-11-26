@@ -9,6 +9,13 @@
 
   padding: 2vh;
 
+  .actions-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   champ-label {
     width: 25vw;
   }
