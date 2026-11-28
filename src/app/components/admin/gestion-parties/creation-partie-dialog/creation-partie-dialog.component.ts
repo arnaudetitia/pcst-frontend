@@ -90,8 +90,8 @@ export class CreationPartieDialogComponent implements OnInit {
     this.partieService
       .createPartie(partieToCreate)
       .pipe(
-        tap((questions) => {
-          this.dialogRef.close(questions);
+        tap((parties) => {
+          this.dialogRef.close(parties);
         }),
         catchError((error) => {
           return of();

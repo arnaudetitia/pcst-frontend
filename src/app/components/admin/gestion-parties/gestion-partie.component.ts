@@ -53,9 +53,9 @@ export class GestionPartieComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(
-        tap((questions) => {
-          if (questions) {
-            this.allParties().data = questions;
+        tap((parties) => {
+          if (parties) {
+            this.allParties().data = parties;
           }
         }),
       )
