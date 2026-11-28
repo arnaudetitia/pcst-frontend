@@ -82,6 +82,43 @@ export class GestionQuestionsComponent implements OnInit {
       .subscribe();
   }
 
+  getQuestionArray(question: string, motIndice: string): [string, string, string] {
+    const normalizedQuestion: string[] = [];
+    const originalIndexes: number[] = [];
+
+    for (let i = 0; i < question.length; i++) {
+      const normalizedChars = question[i]
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLocaleLowerCase();
+
+      for (const normalizedChar of normalizedChars) {
+        normalizedQuestion.push(normalizedChar);
+        originalIndexes.push(i);
+      }
+    }
+
+    const normalizedHint = motIndice
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase();
+
+    const index = normalizedQuestion.join('').indexOf(normalizedHint);
+
+    if (index === -1) {
+      return [question, '', ''];
+    }
+
+    const start = originalIndexes[index];
+    const end = originalIndexes[index + normalizedHint.length - 1] + 1;
+
+    return [
+      question.slice(0, start),
+      question.slice(start, end),
+      question.slice(end),
+    ];
+  }
+
   openAddQuestionDialog() {
     const dialogRef = this.openAddEditQuestionDialog.open(AddEditQuestionDialogComponent, {
       data: {
