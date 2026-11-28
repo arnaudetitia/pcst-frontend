@@ -24,14 +24,4 @@ export class PartieService {
   getPartieById(idPartie: number): Observable<Question[]> {
     return this.http.get<Question[]>(environment.apiUrl + `/parties/${idPartie}`);
   }
-
-  toggleVotes(statusVotes: boolean) {
-    return this.http.put(environment.apiUrl + `/partie/toggle-votes`, {
-      statusVotes: JSON.stringify(statusVotes),
-    });
-  }
-
-  makePartieTermine() {
-    return this.http.put(environment.apiUrl + `/partie/fin`, {});
-  }
 }
