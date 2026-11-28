@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PartieService } from '../../../../services/partie.service';
+import { Partie } from '../../../../models/partie.model';
 
 @Component({
   selector: 'filtrage-question',
@@ -30,8 +32,8 @@ export class FiltrageQuestionComponent implements OnInit {
     (value) => typeof value === 'string',
   ) as string[];
 
-  //allParties = signal<Partie[]>([]);
-  //selectedPartie = signal<Partie | null>(null);
+  allParties = signal<Partie[]>([]);
+  selectedPartie = signal<Partie | null>(null);
 
   currentFiltreType = signal<FiltreQuestionType | null>(null);
   currentFiltreTypeLabel = signal<string | null>(null);
@@ -41,36 +43,36 @@ export class FiltrageQuestionComponent implements OnInit {
   }>();
 
   constructor(
-    //private partieService: PartieService,
+    private partieService: PartieService,
     private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    //combineLatest([this.partieService.getAllParties(), this.activatedRoute.queryParams])
-    //  .pipe(
-    //    tap(([parties, queryParams]) => {
-    //      this.allParties.set(parties);
-    //      const idPartieFromUrl = queryParams['idPartie'];
-    //      if (idPartieFromUrl) {
-    //        const partie = this.allParties().find(
-    //          (partie) => partie.id === Number.parseInt(idPartieFromUrl),
-    //        );
-    //        if (partie) {
-    //          this.currentFiltreType.set(FiltreQuestionType.PARTIE);
-    //          this.currentFiltreTypeLabel.set('PARTIE');
-    //          this.selectedPartie.set(partie);
-    //          const idQuestionList = (partie.listeQuestions as any[]).map(
-    //            (question) => question.idQuestion,
-    //          );
-    //          this.onFiltreValueChange.emit({
-    //            typeFiltre: FiltreQuestionType.PARTIE,
-    //            value: idQuestionList,
-    //          });
-    //        }
-    //      }
-    //    }),
-    //  )
-    //  .subscribe();
+    combineLatest([this.partieService.getAllParties(), this.activatedRoute.queryParams])
+      .pipe(
+        tap(([parties, queryParams]) => {
+          this.allParties.set(parties);
+          const idPartieFromUrl = queryParams['idPartie'];
+          if (idPartieFromUrl) {
+            const partie = this.allParties().find(
+              (partie) => partie.id === Number.parseInt(idPartieFromUrl),
+            );
+            if (partie) {
+              this.currentFiltreType.set(FiltreQuestionType.PARTIE);
+              this.currentFiltreTypeLabel.set('PARTIE');
+              this.selectedPartie.set(partie);
+              const idQuestionList = (partie.listeQuestions as any[]).map(
+                (question) => question.idQuestion,
+              );
+              this.onFiltreValueChange.emit({
+                typeFiltre: FiltreQuestionType.PARTIE,
+                value: idQuestionList,
+              });
+            }
+          }
+        }),
+      )
+      .subscribe();
   }
 
   registerFilterType(value: string) {
@@ -79,7 +81,7 @@ export class FiltrageQuestionComponent implements OnInit {
   }
 
   resetFilter() {
-    //this.selectedPartie.set(null);
+    this.selectedPartie.set(null);
     this.currentFiltreType.set(null);
     this.currentFiltreTypeLabel.set('');
     this.onFiltreValueChange.emit({} as { typeFiltre: FiltreQuestionType; value: any });
