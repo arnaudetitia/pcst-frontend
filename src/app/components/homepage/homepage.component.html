@@ -5,6 +5,7 @@
       [text]="'Lancer une partie'"
       [ratio]="10"
       [inactivated]="!backendAwake()"
+      (click)="openLobby()"
     ></champ-button>
     <champ-button
       [text]="'Gestion des questions'"
