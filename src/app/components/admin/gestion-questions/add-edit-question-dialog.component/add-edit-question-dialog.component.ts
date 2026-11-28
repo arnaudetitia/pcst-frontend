@@ -243,13 +243,15 @@ export class AddEditQuestionDialogComponent {
   updateOptionMotIndiceList(question: string) {
     const words =
       typeof question === 'string'
-        ? question
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .split(/[^\p{L}\p{N}]+/u)
+        ? (question.match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu) ?? [])
             .filter((word) => word.length > 2)
-            .filter((word) => !this.stopWords.has(word))
+            .filter((word) => {
+              const normalizedWord = word
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase();
+              return normalizedWord.length > 2 && !this.stopWords.has(normalizedWord);
+            })
         : [];
     this.motIndiceOptionList.set(
       [...new Set(words.filter(Boolean))].map(

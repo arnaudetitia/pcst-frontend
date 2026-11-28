@@ -18,15 +18,12 @@
       <ng-container matColumnDef="question">
         <th mat-header-cell *matHeaderCellDef>Question</th>
         <td mat-cell *matCellDef="let question">
-          @for (mot of question.question.split(' '); track $index) {
-            <span
-              [ngClass]="{
-                'mot-indice': mot.toLowerCase() === question.motIndice.toLowerCase(),
-              }"
-              >{{ mot }}</span
-            >
-            <span>{{ ' ' }}</span>
+          @let parties = getQuestionArray(question.question, question.motIndice);
+          <span>{{ parties[0] }}</span>
+          @if (parties[1]) {
+            <span class="mot-indice">{{ parties[1] }}</span>
           }
+          <span>{{ parties[2] }}</span>
         </td>
       </ng-container>
 
