@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Créer une partie</h2>
+<mat-dialog-content class="partie-form-container">
+  <form [formGroup]="partieForm">
+    <mat-form-field>
+      <mat-label>Nom de la partie</mat-label>
+      <input matInput formControlName="nomPartie" />
+    </mat-form-field>
+    <div class="questions-list-form">
+      <mat-form-field class="questions-list-selector">
+        <mat-label>Liste des questions</mat-label>
+        <mat-select
+          multiple
+          formControlName="listeQuestions"
+          (selectionChange)="updateEtatSelection($event)"
+        >
+          @for (question of allQuestions(); track question) {
+            <mat-option
+              [value]="question.id"
+              [disabled]="
+                nbMaxQuestionSelected() &&
+                !partieForm.get('listeQuestions')?.value.includes(question.id)
+              "
+              >{{ question.question }} ({{ question.bonneReponse }})</mat-option
+            >
+          }
+        </mat-select>
+      </mat-form-field>
+      @let remaining = nbQuestionTotales() - nbQuestionsSelected();
+      @let message =
+        nbQuestionsSelected() === 0
+          ? 'Veuillez sélectionner au moins une question'
+          : nbQuestionsSelected() === nbQuestionTotales()
+            ? 'Vous avez sélectionné toutes les questions'
+            : 'Ajouter les ' +
+              remaining +
+              ' question' +
+              (remaining > 1 ? 's' : '') +
+              ' suivante' +
+              (remaining > 1 ? 's' : '');
+      <champ-button
+        [text]="message"
+        [ratio]="15"
+        [inactivated]="!canMassAjoutBeClicked()"
+        (click)="ajouterQuestions()"
+      ></champ-button>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <champ-button
+    mat-dialog-close
+    [text]="'Annuler'"
+    [ratio]="5"
+    [colorFill]="'darkgrey'"
+  ></champ-button>
+  <champ-button
+    mat-dialog-close
+    [text]="'Créer la partie'"
+    [ratio]="5"
+    [inactivated]="partieForm.invalid"
+    (click)="creerPartie()"
+  ></champ-button>
+</mat-dialog-actions>

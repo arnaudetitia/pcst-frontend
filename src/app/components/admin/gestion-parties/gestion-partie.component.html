@@ -1,7 +1,11 @@
 <div class="gestion-partie-container">
   <bouton-retour></bouton-retour>
   <champ-label [text]="'Gestion des parties'" [ratio]="7">Gestion des parties</champ-label>
-  <champ-button [text]="'Créer une nouvelle partie'" [ratio]="10"></champ-button>
+  <champ-button
+    [text]="'Créer une nouvelle partie'"
+    [ratio]="10"
+    (click)="openCreationPartieDialog()"
+  ></champ-button>
   <div class="table-wrapper">
     <table mat-table [dataSource]="allParties()">
       <ng-container matColumnDef="nomPartie">

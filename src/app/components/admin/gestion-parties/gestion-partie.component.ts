@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ChampLabel } from '../../../shared/champ/champ-label/champ-label';
 import { ChampButton } from '../../../shared/champ/champ-button/champ-button';
-//import { CreationPartieDialogComponent } from './creation-partie-dialog/creation-partie-dialog.component';
+import { CreationPartieDialogComponent } from './creation-partie-dialog/creation-partie-dialog.component';
 
 @Component({
   selector: 'gestion-partie.component',
@@ -44,21 +44,21 @@ export class GestionPartieComponent implements OnInit {
       .subscribe();
   }
 
-  //openCreationPartieDialog() {
-  //  const dialogRef = this.openAddPartieDialog.open(CreationPartieDialogComponent, {
-  //    width: '75vw',
-  //    disableClose: true,
-  //  });
-  //
-  //  dialogRef
-  //    .afterClosed()
-  //    .pipe(
-  //      tap((questions) => {
-  //        if (questions) {
-  //          this.allParties().data = questions;
-  //        }
-  //      }),
-  //    )
-  //    .subscribe();
-  //}
+  openCreationPartieDialog() {
+    const dialogRef = this.openAddPartieDialog.open(CreationPartieDialogComponent, {
+      width: '75vw',
+      disableClose: true,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        tap((questions) => {
+          if (questions) {
+            this.allParties().data = questions;
+          }
+        }),
+      )
+      .subscribe();
+  }
 }
