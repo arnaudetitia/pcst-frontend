@@ -17,7 +17,7 @@
         <input matInput (input)="onFilterValueChange($event.target.value)" />
       </mat-form-field>
     }
-    <!-- @case (FiltreQuestionType.PARTIE) {
+    @case (FiltreQuestionType.PARTIE) {
       <mat-form-field>
         <mat-label>Nom de la partie</mat-label>
         <mat-select
@@ -29,7 +29,7 @@
           }
         </mat-select>
       </mat-form-field>
-    } -->
+    }
   }
   @if (currentFiltreType() !== null) {
     <button matIconButton (click)="resetFilter()" matTooltip="Réinitialiser le filtre">

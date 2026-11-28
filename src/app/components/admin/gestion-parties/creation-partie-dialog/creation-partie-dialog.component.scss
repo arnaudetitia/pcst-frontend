@@ -1,0 +1,29 @@
+.partie-form-container {
+  background-color: darkgray;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 3vh;
+
+  .questions-list-form {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+
+    .questions-list-selector {
+      width: 49vw;
+    }
+  }
+}
+
+champ-button {
+  width: 25vw;
+}
+
+mat-dialog-actions {
+  champ-button {
+    width: 15vw;
+  }
+}

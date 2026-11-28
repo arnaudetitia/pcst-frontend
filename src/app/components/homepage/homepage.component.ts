@@ -31,4 +31,8 @@ export class HomepageComponent implements OnInit {
   goToGestionQuestions() {
     this.router.navigate(['admin', 'gestion-questions']);
   }
+
+  goToGestionParties() {
+    this.router.navigate(['admin', 'gestion-parties']);
+  }
 }
