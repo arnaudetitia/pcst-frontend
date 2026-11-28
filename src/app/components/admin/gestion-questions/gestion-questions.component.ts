@@ -41,12 +41,12 @@ export class GestionQuestionsComponent implements OnInit {
   openImportDialog = inject(MatDialog);
 
   filterTexte = signal<string>('');
-  //filtrePartie = signal<number[]>([]);
+  filtrePartie = signal<number[]>([]);
 
   filtre = computed(() => {
     return {
       texte: this.filterTexte(),
-      //partie: this.filtrePartie(),
+      partie: this.filtrePartie(),
     };
   });
 
@@ -61,12 +61,12 @@ export class GestionQuestionsComponent implements OnInit {
           .includes(textFilter.toLocaleLowerCase());
       }
 
-      //const partieFilter = filtreParsed.partie;
-      //let questionInPartie = true;
-      //if (partieFilter.length > 0) {
-      //  questionInPartie = partieFilter.includes(question.id);
-      //}
-      return questionContainsTexte; //&& questionInPartie;
+      const partieFilter = filtreParsed.partie;
+      let questionInPartie = true;
+      if (partieFilter.length > 0) {
+        questionInPartie = partieFilter.includes(question.id);
+      }
+      return questionContainsTexte && questionInPartie;
     };
     this.allQuestions().filter = JSON.stringify(this.filtre());
   }
@@ -112,11 +112,7 @@ export class GestionQuestionsComponent implements OnInit {
     const start = originalIndexes[index];
     const end = originalIndexes[index + normalizedHint.length - 1] + 1;
 
-    return [
-      question.slice(0, start),
-      question.slice(start, end),
-      question.slice(end),
-    ];
+    return [question.slice(0, start), question.slice(start, end), question.slice(end)];
   }
 
   openAddQuestionDialog() {
@@ -182,14 +178,14 @@ export class GestionQuestionsComponent implements OnInit {
 
   updateFiltre(filtre: { typeFiltre: FiltreQuestionType; value: string | number[] | null }) {
     this.filterTexte.set('');
-    //this.filtrePartie.set([]);
+    this.filtrePartie.set([]);
     switch (filtre.typeFiltre) {
       case FiltreQuestionType.TEXTE:
         this.filterTexte.set(filtre.value as string);
         break;
-      //case FiltreQuestionType.PARTIE:
-      //  this.filtrePartie.set(filtre.value as any);
-      //  break;
+      case FiltreQuestionType.PARTIE:
+        this.filtrePartie.set(filtre.value as any);
+        break;
     }
     this.allQuestions().filter = JSON.stringify(this.filtre());
   }
